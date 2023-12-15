@@ -27,10 +27,14 @@ def predict():
 
         # Make predictions
         prediction = model.predict(text_vectorized)[0]
-#         score = model.predict_proba(text_vectorized)[0]
-#         score = [round(float(num),3) for num in score]
+        score = model.predict_proba(text_vectorized)[0]
+        score = [round(float(num),3) for num in score]
         new = encoder.inverse_transform([prediction])[0]
-#         raw = f"{score} {new}"
+        if max(score) < 0.5:
+            new = "Unrelated Inputs, please insert financial consumer complaint"
+        if new == "Credit reporting, credit repair services, or other personal consumer reports":
+            new = "Credit reporting or credit repair services"
+        new = f"{new}"
         # Return the prediction as JSON
         return render_template('index.html', prediction=new)
 
